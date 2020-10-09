@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hk.pilot.mapper.AuthMapper">
+
+<insert id="addPersonalPay" >
+	INSERT INTO PERSONALPAY (ID, CARDCOM, CARDNUM) 
+	VALUES (#{id}, #{cardCom}, #{cardNum})
+</insert>
+
+<!-- id중복체크 sql문 -->
+<select id="checkId" parameterType="String" resultType="com.hk.pilot.dto.Members">
+	select * from members where id=#{id}
+</select>
+
+<insert id="addMembers" parameterType="com.hk.pilot.dto.Members">
+	INSERT INTO MEMBERS (ID, PWD, NAME, EMAIL, PNUM, USERZIPCODE, USERFIRSTADDR, USERSECONDADDR, USEREXTRAADDR, GRADE)
+	VALUES (#{id}, #{pwd}, #{name}, #{email}, #{pnum}, #{userZipCode}, #{userFirstAddr}, #{userSecondAddr}, #{userExtraAddr}, #{grade})
+</insert>
+
+<insert id="addStores" parameterType="com.hk.pilot.dto.Stores">
+	INSERT INTO STORES (ID, SNAME, SCONTACT, SNUM, BANK, BNUM, AREA_NUM, STOREFIRSTADDR, STORESECONDADDR, STOREEXTRAADDR, STOREZIPCODE )
+	VALUES (#{id}, #{sname}, #{scontact}, #{snum}, #{bank}, #{bnum}, #{area_num}, #{storeFirstAddr}, #{storeSecondAddr}, #{storeExtraAddr}, #{storeZipCode})
+</insert>
+
+<insert id="addItemList" parameterType="com.hk.pilot.dto.ItemList">
+	INSERT INTO ITEMLIST (SNUM, ITEMS, Y1, B1, T1, M1, P1, K1, J1, C1, P2, D1, S1, C2, B2)
+	VALUES (#{snum}, #{items}, #{Y1}, #{B1}, #{T1}, #{M1}, #{P1}, #{K1}, #{J1}, #{C1}, #{P2}, #{D1}, #{S1}, #{C2}, #{B2})
+</insert>
+
+<insert id="addEmailCheck" parameterType="com.hk.pilot.dto.EmailCheck">
+	INSERT INTO EMAILCHECK (EMAIL, JOINCODE)
+	VALUES (#{email}, #{joinCode})
+</insert>
+
+<select id="getDbCode" parameterType="String" resultType="String">
+	SELECT JOINCODE FROM (
+		SELECT JOINCODE FROM EMAILCHECK
+		WHERE EMAIL=#{email}
+		ORDER BY ROWNUM DESC)
+	WHERE ROWNUM = 1
+</select>
+
+<select id="findId" parameterType="com.hk.pilot.dto.Members" resultType="com.hk.pilot.dto.Members">
+	SELECT * FROM MEMBERS
+	WHERE name=#{name} and EMAIL=#{email}
+</select>
+
+<update id="updateRandomPwd" parameterType="com.hk.pilot.dto.Members">
+	UPDATE MEMBERS
+	SET PWD=#{pwd}
+	WHERE ID=#{id} AND EMAIL=#{email}
+</update>
+</mapper>
+	
